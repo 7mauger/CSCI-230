@@ -3,7 +3,7 @@ from PIL import Image, ImageTk
 
 #create a widget called app, adding its size, title, and background color
 app = Tk()
-app.geometry("450x200")
+app.geometry("600x600")
 app.title("Aquatic Chrono-converter")
 app.configure(background="#4ED")
 
@@ -55,7 +55,7 @@ variableCourse.set("Select Course")
 
 course = apply(OptionMenu, (app, variableCourse) + tuple(COURSE))
 course.grid()
-course.place(x=300, y=0)
+course.place(x=450, y=0)
 course.configure(background="#4ED")
 
 #Texts are bellow---------------------------------------------------------------
@@ -75,11 +75,26 @@ period.configure(background="#4ED", highlightbackground="#4ED")
 
 #add the first conversion text box, which the first converted time will be inserted in
 convert1 = Text(app, height=1, width=25)
-convert1.place(x=250, y=70)
+convert1.place(x=400, y=70)
 
 #add the second conversion text box, which the second converted time will be inserted in
 convert2 = Text(app, height=1, width=25)
-convert2.place(x=250, y=110)
+convert2.place(x=400, y=110)
+
+time1 = Text(app, height=1, width=80)
+time1.place(x=10, y=250)
+
+time2 = Text(app, height=1, width=80)
+time2.place(x=10, y=300)
+
+time3 = Text(app, height=1, width=80)
+time3.place(x=10, y=350)
+
+time4 = Text(app, height=1, width=80)
+time4.place(x=10, y=400)
+
+time5 = Text(app, height=1, width=80)
+time5.place(x=10, y=450)
 
 #Entries are bellow-------------------------------------------------------------
 #add an entry text box for the user to input desired minutes of their time to convert and assign it to minutes
@@ -112,12 +127,12 @@ sprintButton.configure(background="#4ED")
 
 #add a radio button designated for mid-distance swimmers
 midButton = Radiobutton(app, text="Mid-Distance", variable=radioButton, value=2)
-midButton.place(x=160, y=150)
+midButton.place(x=230, y=150)
 midButton.configure(background="#4ED")
 
 #add a radio button designated for distance swimmers
 distButton = Radiobutton(app, text="Distance", variable=radioButton, value=3)
-distButton.place(x=350, y=150)
+distButton.place(x=500, y=150)
 distButton.configure(background="#4ED")
 
 #Converter is bellow------------------------------------------------------------
@@ -310,7 +325,6 @@ def displayTime(t1,t2):
     else:
         output1 = "Time (LCM): " + t1
         output2 = "Time (SCM): " + t2
-
     #delete whatever text is in convert1
     convert1.delete(1.0, END)
     #insert the output for the converted times in convert1
@@ -319,11 +333,40 @@ def displayTime(t1,t2):
     convert2.delete(1.0, END)
     #insert the output for the converted times in convert2
     convert2.insert(INSERT, output2)
+#-------------------------------------------------------------------------------
+lines = []
+def save():
+    conversion1 = convert1.get("1.0",END)
+    conversion2 = convert2.get("1.0",END)
+    minute = minutes.get()
+    second = seconds.get()
+    hundreth = hundreths.get()
+    course = variableCourse.get()
+    event = variableEvent.get()
+    time = minute + ":" + second + "." + hundreth
+    save = event+' | '+'Time ('+course+'): '+time+', '+conversion1+', '+conversion2
+    save = save.replace('\n', '')
+    lines.append(save+"\n")
+    f = open("times.txt", "w")
+    f.writelines(lines)
+    f.close
+    viewConversions()
+
+def viewConversions():
+    time1.insert(INSERT, lines[0])
+    time2.insert(INSERT, lines[1])
+    time3.insert(INSERT, lines[2])
+    time4.insert(INSERT, lines[3])
+    time5.insert(INSERT, lines[4])
 
 #create a button to convert the inputted time, place it, and change highlighted background
-converterButton  = Button(app, text="convert", command=convert)
+converterButton = Button(app, text="convert", command=convert)
 converterButton.place(x=150, y=80)
 converterButton.configure(highlightbackground="#4ED")
+
+saveConversion = Button(app, text="save conversion", command=save)
+saveConversion.place(x=230, y=0)
+saveConversion.configure(highlightbackground="#4ED")
 #-------------------------------------------------------------------------------
 
 app.mainloop()
